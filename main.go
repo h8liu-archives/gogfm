@@ -19,6 +19,8 @@ func noError(e error) {
 var (
 	output = flag.String("out", "", "output file")
 	quiet = flag.Bool("q", false, "quite")
+	user = flag.String("user", "", "username")
+	pass = flag.String("pass", "", "password")
 )
 
 func main() {
@@ -30,9 +32,21 @@ func main() {
 	}
 
 	fin, e := os.Open(args[0])
-	url := "https://api.github.com/markdown/raw"
-	resp, e := http.Post(url, "text/plain", fin)
 	noError(e)
+
+	url := "https://api.github.com/markdown/raw"
+	req, e := http.NewRequest("POST", url, fin)
+	noError(e)
+
+	req.Header.Set("Content-Type", "text/plain")
+	if *user != "" {
+		req.SetBasicAuth(*user, *pass)
+	}
+
+	client := new(http.Client)
+	resp, e := client.Do(req)
+	noError(e)
+
 	if !*quiet {
 		fmt.Fprintln(os.Stderr, resp.Status)
 	}
