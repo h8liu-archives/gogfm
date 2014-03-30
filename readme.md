@@ -2,7 +2,7 @@ A simple utility that reads a markdown file, calls Github online API
 (`https://api.github.com/markdown/raw`), converts it with 
 Github Flavored Markdown, and outputs the result
 
-**Usage**
+**Usage Example**
 
 ```
 $ gogfm -q readme.md 
