@@ -47,7 +47,7 @@ func main() {
 	resp, e := client.Do(req)
 	noError(e)
 
-	if !*quiet {
+	if !(*quiet || resp.StatusCode == 200) {
 		fmt.Fprintln(os.Stderr, resp.Status)
 	}
 
@@ -60,5 +60,8 @@ func main() {
 	_, e = io.Copy(fout, resp.Body)
 	noError(e)
 
-	noError(fout.Close())
+	fmt.Fprintln(fout)
+	if fout != os.Stdout {
+		noError(fout.Close())
+	}
 }
